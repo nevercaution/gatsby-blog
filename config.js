@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'development') {
   config.googleAnalyticsTrackingId = '';
   config.disqusShortname = '';
   config.googleAdsense = false;
-  config.naverWebmasterId = '';
+  sconfig.naverWebmasterId = '';
 }
 
 module.exports = config;

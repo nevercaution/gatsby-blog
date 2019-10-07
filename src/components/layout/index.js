@@ -82,7 +82,7 @@ const Layout = ({ children, data, location }) => (
             {/* google adsense */}
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             {/* naver webmaster */}
-            <meta name="naver-site-verification" content="${config.naverWebmasterId}" />
+            <meta name="naver-site-verification" content={config.naverWebmasterId} />
           </Helmet>
 
           <div id="wrap">
