@@ -47,7 +47,7 @@
     "start": "gatsby develop",
     "build": "rm -rf .cache/ && rm -rf public/ && gatsby build",
     "clean": "rm -rf .cache/ && rm -rf public/",
-    "gh-pages": "gh-pages -d public -b master -r 'https://github.com/nevercaution/nevercaution.github.io'",
+    "publish": "gh-pages -d public -b master -r 'https://github.com/nevercaution/nevercaution.github.io'",
     "deploy": "npm run build && npm run publish",
     "format": "prettier --trailing-comma es5 --no-semi --single-quote --write 'src/**/*.js' 'src/**/*.md'"
   },
