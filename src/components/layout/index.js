@@ -8,6 +8,8 @@ import Footer from './Footer';
 import config from '../../../config';
 import { googleFontString } from '../../utils/typography';
 
+import favicon from '../../images/favicon.ico';
+
 const Layout = ({ children, data, location }) => (
   <StaticQuery
     query={graphql`
@@ -61,6 +63,8 @@ const Layout = ({ children, data, location }) => (
               { name: 'og:url', content: siteUrl },
             ]}
           >
+            {/* favicon */}
+            <link rel="shortcut icon" href={favicon} />
             {/* html lang set */}
             <html lang="ko" />
             {/* load google font */}
@@ -77,6 +81,8 @@ const Layout = ({ children, data, location }) => (
             </script>
             {/* google adsense */}
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            {/* naver webmaster */}
+            <meta name="naver-site-verification" content="${config.naverWebmasterId}" />
           </Helmet>
 
           <div id="wrap">

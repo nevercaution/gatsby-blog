@@ -21,6 +21,9 @@ let config = {
   googleAdsense: true,
   adsenseClient: 'pub-2516810533693172',
   adsenseSlot: '5544246730',
+
+  // naver
+  naverWebmasterId: '81b46b3e7e3efa805baa5354ab253b3b7c150f19',
 };
 
 /********************************************** */
@@ -29,6 +32,7 @@ if (process.env.NODE_ENV === 'development') {
   config.googleAnalyticsTrackingId = '';
   config.disqusShortname = '';
   config.googleAdsense = false;
+  config.naverWebmasterId = '';
 }
 
 module.exports = config;
