@@ -1,23 +1,24 @@
 ---
 title: API Gateway 구축하기 - Spring Cloud Zuul
-catalog: true
+category: develop
 date: 2018-10-23 17:32:01
-subtitle:
-header-img: "/img/header_img/bg.png"  
 tags:
-- netflix-zuul
-- springboot
-- spring-cloud
-- api-gateway
+  - netflix-zuul
+  - springboot
+  - spring-cloud
+  - api-gateway
+keywords:
+  - netfilix zuul
+  - api gateway
 ---
-api gatway 를 도입했다. 레거시 프로젝트를 정리하면서 msa 구조로 가게 되었고 필요에 따라 서비스들이 나뉘고 있어서 이를 한곳에서 관리해줄 필요가 있었다. 구조를 설계하면서 어느 레벨까지를 gateway 에서 처리할지에 대해 여러 고민이 있었고 너무나 크지 않은 선에서 일차적으로 도입을 하게 되었다.    
-gateway 를 구성하기 위해 아래의 3개의 프로젝트를 설정한다.  
-1. 라우팅을 해줄 gateway (zuul gateway)  
-2. gateway 와 zuul 설정을 연결해줄 중간자 (spring cloud config)  
-3. zuul 설정을 저장할 저장소 (git)   
+api gatway 를 도입했다. 레거시 프로젝트를 정리하면서 msa 구조로 가게 되었고 필요에 따라 서비스들이 나뉘고 있어서 이를 한곳에서 관리해줄 필요가 있었다. 구조를 설계하면서 어느 레벨까지를 gateway 에서 처리할지에 대해 여러 고민이 있었고 너무나 크지 않은 선에서 일차적으로 도입을 하게 되었다.
+gateway 를 구성하기 위해 아래의 3개의 프로젝트를 설정한다.
+1. 라우팅을 해줄 gateway (zuul gateway)
+2. gateway 와 zuul 설정을 연결해줄 중간자 (spring cloud config)
+3. zuul 설정을 저장할 저장소 (git)
 
 ### 1. gateway 구성
-springboot, gradle 로 구성을 했고 버전은 2를 사용한다. spring cloud zuul 도 있지만 버전2에서는 아직 추가되지 않아 netflix zuul 을 사용하기로 한다.  
+springboot, gradle 로 구성을 했고 버전은 2를 사용한다. spring cloud zuul 도 있지만 버전2에서는 아직 추가되지 않아 netflix zuul 을 사용하기로 한다.
 #### 빌드 설정
 
 `build.gradle`
@@ -34,27 +35,27 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
- 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
- 
+
 group = 'com.nevercaution'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
- 
+
 dependencies {
-    compile('org.springframework.cloud:spring-cloud-starter-netflix-zuul') 
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-zuul')
     compile('org.springframework.cloud:spring-cloud-starter-config')
     compile('org.codehaus.groovy:groovy-all')
     compile('com.googlecode.json-simple:json-simple')
- 
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
- 
+
 }
- 
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.SR1"
@@ -63,15 +64,15 @@ dependencyManagement {
 ```
 
 #### 프로젝트 설정
-  
+
 ```
-spring-cloud 를 사용할 때엔 application.yml 보다 bootstrap.yml 을 먼저 읽어 들인다.  
+spring-cloud 를 사용할 때엔 application.yml 보다 bootstrap.yml 을 먼저 읽어 들인다.
 먼저 읽은 값을 기반으로 application.yml 에 설정된 값들을 함께 사용하기 위함이다.
 ```
 
 application.name 과 spring.profiles.active 두 값으로 cloud config 에 정보를 요청한다. 이 값을 적지 않을 경우엔 값을 가져오지 못한다. 또한 profiles.active 를 명시해주지 않으면 기본적으로 default profile 로 로드를 시도한다.
 
-`bootstrap.yml`  
+`bootstrap.yml`
 
 ```yml
 spring:
@@ -80,7 +81,7 @@ spring:
   # 이 이름으로 spring cloud config server 에서 정보를 가져온다.
   application:
     name: gateway
- 
+
 ---
 ########################################
 ###              local               ###
@@ -94,11 +95,11 @@ spring:
 ```
 
 spring-cloud 에서 zuul route 설정들을 받아온다. 만약 spring-cloud 가 죽었을 경우를 대비해야 한다면 route 설정값들을 application.yml 에 해주면 된다.
-참고로 spring-cloud-config 기본 주소는 localhost:8888 이다. 즉 8888포트로 사용할 거라면 따로 설정하지 않아도 기본으로 이 주소로 접근을 시도한다. 원하는 경로로 사용할 경우에는 반드시 명시해주어야 한다.  
+참고로 spring-cloud-config 기본 주소는 localhost:8888 이다. 즉 8888포트로 사용할 거라면 따로 설정하지 않아도 기본으로 이 주소로 접근을 시도한다. 원하는 경로로 사용할 경우에는 반드시 명시해주어야 한다.
 
 필요에 따라 zuul 설정을 여기에서 해줘도 된다. 만약 cloud config 에서 값을 읽어들이지 못할 경우엔 여기에 있는 값을 사용하게 된다.
 
-`application.yml`  
+`application.yml`
 
 ```yml
 spring:
@@ -106,8 +107,8 @@ spring:
   groovy:
     template:
       cache: false
- 
- 
+
+
 # 필요한 actuator end point 만 열어둔다.
 management:
   endpoints:
@@ -115,18 +116,18 @@ management:
       exposure:
         # 원하는 endpoint 를 추가할 수 있다.
         include: info, routes, filters, refresh
- 
- 
+
+
 ---
 ########################################
 ###              local               ###
 ########################################
 spring:
   profiles: local
- 
+
 server:
   port: 8087
- 
+
 # 여기서 설정도 가능하다. 우선순위는 cloud config 가 더 높다.
 #zuul:
 #  routes:
@@ -137,19 +138,19 @@ server:
 ---
 ```
 
-application 에 @EnableZuulProxy 만 달아주면 gateway는 설정이 모두 끝난다. 
+application 에 @EnableZuulProxy 만 달아주면 gateway는 설정이 모두 끝난다.
 
-`GatewayApplication.java`  
+`GatewayApplication.java`
 
 ```java
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
- 
+
 @EnableZuulProxy  // 이 annotation 만 추가하면 된다.
 @SpringBootApplication
 public class GatewayApplication {
- 
+
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
     }
@@ -161,7 +162,7 @@ config-server 는 cloud-config 에 저장되어있는 설정들을 gateway 들�
 
 #### 빌드설정
 
-`build.gradle`  
+`build.gradle`
 
 ```gradle
 buildscript {
@@ -175,25 +176,25 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
- 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
- 
+
 group = 'com.nevercaution'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
- 
+
 ext {
     springCloudVersion = 'Finchley.SR1'
 }
- 
+
 dependencies {
     compile('org.springframework.cloud:spring-cloud-config-server')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
- 
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
@@ -203,12 +204,12 @@ dependencyManagement {
 
 #### 프로젝트 설정
 
-`application.yml`  
+`application.yml`
 
 ```yml
 server:
   port: 8889
- 
+
 spring:
   cloud:
     config:
@@ -218,21 +219,21 @@ spring:
           username: username
           password: password
 ```
-config-server 역시 application 에 @EnableConfigServer 달아주면 끝.  
-gateway 에서 필요한 값들은 config.git 에서 받아온다.  
+config-server 역시 application 에 @EnableConfigServer 달아주면 끝.
+gateway 에서 필요한 값들은 config.git 에서 받아온다.
 
-`Application.java`   
+`Application.java`
 
 ```java
- 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.config.server.EnableConfigServer;
- 
+
 @EnableConfigServer  // 이 annotation 만 적어주면 끝.
 @SpringBootApplication
 public class MimirApplication {
- 
+
     public static void main(String[] args) {
         SpringApplication.run(MimirApplication.class, args);
     }
@@ -240,7 +241,7 @@ public class MimirApplication {
 ```
 
 ### 3. config 설정
-cloud-config 는 gateway 에서 사용할 zuul 에 관련된 설정들을 모아놓는 곳이다. 
+cloud-config 는 gateway 에서 사용할 zuul 에 관련된 설정들을 모아놓는 곳이다.
 
 `gateway.yml`
 
@@ -251,15 +252,15 @@ cloud-config 는 gateway 에서 사용할 zuul 에 관련된 설정들을 모아
 ########################################
 spring:
   profiles: local
- 
-# zuul route 설정들. 
+
+# zuul route 설정들.
 zuul:
   routes:
     apiService:
       stripPrefix: false
       path: /api/**
       url: https://new-api-service.com
- 
+
 # groovy filter 가 있는 경로를 적어준다.
 gateway:
   zuul:
@@ -279,7 +280,7 @@ gateway 에서는 지정된 경로에 groovy filter 들을 로드 시킨다.
 gateway 에서 gateway.zuul.filters.base-path 이 값은 spring-cloud-config 에서 받아와서 로드한다.
 FileManager.init 에서 첫번째 파라미터는 이 경로에 몇초마다 파일들을 갱신할지 여부이다. 짧게 가져갈수록 부하가 있지만 대신 코드가 빠르게 적용된다.
 
-`ZuulFilterCommandLineRunner.java` 
+`ZuulFilterCommandLineRunner.java`
 
 ```java
 import com.netflix.zuul.FilterFileManager;
@@ -291,15 +292,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
- 
+
 @Component
 public class ZuulFilterCommandLineRunner implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(ZuulFilterCommandLineRunner.class);
-     
+
     // cloud config 에 정의된 경로에서 로드한다.
     @Value("${gateway.zuul.filters.base-path}")
     private String filterBasePath;
- 
+
     @Override
     public void run(String... args) {
         FilterLoader.getInstance().setCompiler(new GroovyCompiler());
@@ -327,49 +328,49 @@ import com.netflix.zuul.context.RequestContext
 import com.netflix.zuul.exception.ZuulException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
- 
+
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PROXY_KEY
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SIMPLE_HOST_ROUTING_FILTER_ORDER
- 
+
 public class SimpleRoute extends ZuulFilter {
- 
+
     private static final Logger logger = LoggerFactory.getLogger(SimpleRoute.class);
- 
+
     @Override
     String filterType() {
         return "route"
     }
- 
+
     @Override
     int filterOrder() {
         return SIMPLE_HOST_ROUTING_FILTER_ORDER - 1
     }
- 
+
     @Override
     boolean shouldFilter() {
         return true
     }
- 
+
     @Override
     Object run() throws ZuulException {
         def ctx = RequestContext.getCurrentContext()
         def req = ctx.getRequest()
- 
+
         def host = ctx.getRouteHost()
-         
+
         try {
- 
+
             RequestContext.currentContext.setRouteHost(new URL("https://another-new-api-service.com"))
-             
+
             logger.info("REQUEST:: " + req.getScheme() + " " + req.getRemoteAddr() + ":" + req.getRemotePort())
- 
+
             logger.info("REQUEST:: > " + req.getMethod() + " " + req.getRequestURI() + " " + req.getProtocol())
         } catch(Exception e) {
             logger.error("errer handling")
             ctx.setRouteHost(host)
         }
- 
- 
+
+
         return null
     }
 }
@@ -382,7 +383,7 @@ route 설정을 편집하거나 추가하는 상황이다.
 
 #### 1. route 설정 편집과 추가 하기
 
-`gateway.yml` 
+`gateway.yml`
 
 ```yml
 ########################################
@@ -403,12 +404,12 @@ zuul:
       stripPrefix: false
       path: /search/**
       url: https://search-api-service.com
- 
+
 # groovy filter 가 있는 경로를 적어줍니다.
 gateway:
   zuul:
     filters:
-      base-path: /path/to/filter/   
+      base-path: /path/to/filter/
 ```
 
 1 번 주석 부분은 기존에 api 라는 경로로 들어왔을 때 new-api-service.com 에서 some-api-service.com 으로 변경을 해주었다.
@@ -428,7 +429,7 @@ gateway 에서 /refresh 를 호출하게 되면 처음에 받아왔던 정보에
 ### route 동적 편집 가능
 zuul 을 이용해서 경로에 따라 원하는 도메인으로 routing 을 해줄 수 있다. 이 설정값들은 spring-cloud-config 에 저장되어 있는데 이 값들을 동적으로 편집할 수 있다. 이 동작은 spring-actuator 을 이용한다.
 
-post 요청으로 `/actuator/refresh` 를 gateway 에 호출하면 반영이 된다. 
+post 요청으로 `/actuator/refresh` 를 gateway 에 호출하면 반영이 된다.
 
 ### filter 동적 편집 가능
 filter 역시 동적으로 편집하거나 추가할 수 있는데, 이는 zuul file manager 를 통해 특정 경로에 있는 groovy filter file 들을 로드해서 읽어서 사용한다. file manager 가 주기적으로 파일의 동기화를 하고 있으므로 파일을 수정하면 지정된 시간마다 동기화를 한다.

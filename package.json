@@ -1,8 +1,8 @@
 {
-  "name": "junhobaik-personal-web",
-  "description": "Junho Baik's devLog, Front-End Development",
+  "name": "nevercaution github page",
+  "description": "Why by normal?",
   "version": "1.0.0",
-  "author": "Junho Baik <junhobaik@gmail.com>",
+  "author": "nevercaution <nevercaution@gmail.com>",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
     "@fortawesome/free-regular-svg-icons": "^5.9.0",

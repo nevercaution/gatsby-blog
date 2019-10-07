@@ -5,7 +5,7 @@ import PostList from '../components/PostList';
 
 import './index.scss';
 
-export default class Index extends Component {
+export default class Review extends Component {
   render() {
     const edges = this.props.data.allMarkdownRemark.edges;
     const location = this.props.location;
@@ -22,7 +22,7 @@ export const pageQuery = graphql`
     allMarkdownRemark(
       sort: { fields: [frontmatter___date], order: DESC }
       limit: 1000
-      filter: { frontmatter: { published: { ne: false } } }
+      filter: { frontmatter: { published: { ne: false }, category: { eq: "review" } } }
     ) {
       edges {
         node {

@@ -1,16 +1,16 @@
 ---
 title: Spring Boot Starter Customize 하기
-catalog: true
+category: develop
 date: 2019-10-02 13:06:36
-subtitle:
-header-img: "/img/header_img/bg.png"
 tags:
-- springboot
-- maven
-- spring
-- autoconfigure
-- boot
-- custom
+  - springboot
+  - maven
+  - spring
+  - autoconfigure
+  - boot
+  - custom
+keywords:
+  - spring boot starter custom
 ---
 
 ## spring boot starter

@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { StaticQuery, graphql, Link } from 'gatsby';
-import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faHome, faTags, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import './index.scss';
 import Footer from './Footer';
@@ -17,6 +15,7 @@ const Layout = ({ children, data, location }) => (
         site {
           siteMetadata {
             title
+            description
           }
         }
       }
@@ -101,22 +100,27 @@ const Layout = ({ children, data, location }) => (
               <div className="menu">
                 <div className="home">
                   <Link to="/">
-                    <Fa icon={faHome} fixedWidth transform="down-1" />
                     <span>Home</span>
                   </Link>
                 </div>
-
-                <div className="tags">
-                  <Link to="/tags">
-                    <Fa icon={faTags} fixedWidth transform="down-1" />
-                    <span>Tags</span>
+                <div className="develop">
+                  <Link to="/develop">
+                    <span>Develop</span>
                   </Link>
                 </div>
-
-                <div className="search">
-                  <Link to="/search">
-                    <Fa icon={faSearch} fixedWidth transform="down-1" />
-                    <span>Search</span>
+                <div className="diary">
+                  <Link to="/diary">
+                    <span>Diary</span>
+                  </Link>
+                </div>
+                <div className="review">
+                  <Link to="/review">
+                    <span>Review</span>
+                  </Link>
+                </div>
+                <div className="tags">
+                  <Link to="/tags">
+                    <span>Tags</span>
                   </Link>
                 </div>
               </div>

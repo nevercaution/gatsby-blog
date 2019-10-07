@@ -1,14 +1,14 @@
 ---
 title: "Python에서 iOS, Android 스토어 인앱 결제 검증하기"
-catalog: true
+category: develop
 date: 2016-03-11 16:43:24
-subtitle:
-header-img: "/img/header_img/bg.png"
 tags:
-- python
-- ios
-- android
-- inapp
+  - python
+  - ios
+  - android
+  - inapp
+keywords:
+  - python inapp 검증
 ---
 Django framework를 이용해서 프로젝트를 만들면서 했던 여러가지 삽질들과 넘어야했던 많은 산들과 몰랐던 부분들에 대해서 내 나름 공부 겸 기록을 위해 남겨둬야 겠다는 생각이 들었다. 프로젝트로 한창 바빴던 시기에는 당장 앞에 놓여진 일들에 치여 이런 생각을 못하고 있다가 지금은 조금 여유가 되어 그 때 있었던 일들에 대한 나름의 경험을 기록해보고자 한다.
 
@@ -25,7 +25,7 @@ Django framework를 이용해서 프로젝트를 만들면서 했던 여러가�
 ```
 pip install pycrypto
 ```
- 
+
 
 다음은 영수증 검증 코드이다. signed_data 는 안드로이드 결제완료시 넘어온 암호화된 영수증 문자열이고 signature는 클라이언트와 약속된 특정 문자열이다. 안드로이드에서 결제를 요청할 당시 이 값을 함께 넘겨주면 signed_data 내부에 이 signature 값이 심어들어가게 되고, 복호화를 하면 이 값이 풀어져 나와 영수증 검증을 할 수 있다.
 
@@ -80,7 +80,7 @@ pip install itunes-iap
 ```
 
 itunes-iap를 설치하면 의존성 라이브러리들이 이것저것 왕창 설치된다. 궁금하면 ($pip list 를 통해 확인해볼것)
-이번에는 iOS 영수증 검증 코드를 보도록 하자. 이 때 transaction_id 는 결제 당시 결과값으로 오는 구매 영수증 id이고, raw_data는 암호화된 영수증 문자열이다. 
+이번에는 iOS 영수증 검증 코드를 보도록 하자. 이 때 transaction_id 는 결제 당시 결과값으로 오는 구매 영수증 id이고, raw_data는 암호화된 영수증 문자열이다.
 
 ```
 import itunesiap
@@ -116,12 +116,12 @@ def _verify_for_ios(transaction_id: str, raw_data: str):
         return response.status == 0
 ```
 
-iOS 영수증 유효성 검증은 간단하다. itunesiap.verify 메소드를 통해 iOS에서 넘어온 데이터를 넣고 호출하면 복호화된 영수증 데이터가 나온다. 이 때 status 값이 0 이라면 유효한 영수증이라고 판단한다. 뭔가 apple다운 api라고 생각한다. 처음 iOS영수증 검증을 할 당시엔 verify 메소드만 호출하고 그 뒤에 넘어온 데이터의 status 값만 확인하고 유효성을 검증했다. 
-여기서 나의 삽질이 시작되었다. 
+iOS 영수증 유효성 검증은 간단하다. itunesiap.verify 메소드를 통해 iOS에서 넘어온 데이터를 넣고 호출하면 복호화된 영수증 데이터가 나온다. 이 때 status 값이 0 이라면 유효한 영수증이라고 판단한다. 뭔가 apple다운 api라고 생각한다. 처음 iOS영수증 검증을 할 당시엔 verify 메소드만 호출하고 그 뒤에 넘어온 데이터의 status 값만 확인하고 유효성을 검증했다.
+여기서 나의 삽질이 시작되었다.
 
-1. 일단 주석에서 보는것과 같이 sandbox환경과 real환경일 때에 호출하는 api가 다르다. itunesiap의 환경을 설정을 해주는 방법은 여러가지가 있다. 각자 개발환경에서 영수증 유효성을 검사할 때엔 sandbox와 real환경을 잘 구분해서 api를 호출해주도록 하자. 아무리 유효한 영수증이라 할지라도 틀린 환경의 api를 호출하면 유효하지 않다고 판단하기 때문이다. 
+1. 일단 주석에서 보는것과 같이 sandbox환경과 real환경일 때에 호출하는 api가 다르다. itunesiap의 환경을 설정을 해주는 방법은 여러가지가 있다. 각자 개발환경에서 영수증 유효성을 검사할 때엔 sandbox와 real환경을 잘 구분해서 api를 호출해주도록 하자. 아무리 유효한 영수증이라 할지라도 틀린 환경의 api를 호출하면 유효하지 않다고 판단하기 때문이다.
 
-2. 보통 verify 메소드를 호출하면 receipt 값 안에 하나의 영수증 정보만 가져온다. 하지만 특정 상황의 경우 receipt 데이터 안에 1개 이상의 영수증 정보가 딸려 오는 경우가 있다. 이 때에 한가지 데이터만이 유효한 영수증 값이다. 이 중에서 한가지 영수증만을 가지고 검증을 해야 하는데 여러 삽질 후에 깨달은 바는 receipt 안의 데이터들의 purchase_date_ms 값을 이용해 가장 마지막에 결제된 영수증 정보가 파라메터로 넘어온 transaction_id 와 동일하다는 점을 알게 되었다. 그래서 _get_key 메소드를 통해 receipt 리스트를 정렬하고, 그 중에 가장 마지막 영수증 정보를 뽑아 transaction_id 가 같은지 여부를 판단한다. 
+2. 보통 verify 메소드를 호출하면 receipt 값 안에 하나의 영수증 정보만 가져온다. 하지만 특정 상황의 경우 receipt 데이터 안에 1개 이상의 영수증 정보가 딸려 오는 경우가 있다. 이 때에 한가지 데이터만이 유효한 영수증 값이다. 이 중에서 한가지 영수증만을 가지고 검증을 해야 하는데 여러 삽질 후에 깨달은 바는 receipt 안의 데이터들의 purchase_date_ms 값을 이용해 가장 마지막에 결제된 영수증 정보가 파라메터로 넘어온 transaction_id 와 동일하다는 점을 알게 되었다. 그래서 _get_key 메소드를 통해 receipt 리스트를 정렬하고, 그 중에 가장 마지막 영수증 정보를 뽑아 transaction_id 가 같은지 여부를 판단한다.
 
 자 이제 우리는 python을 이용해서 android, iOS의 영수증을 검증할 수 있게 되었다. 간단하지도 복잡하지도 않고, 몰랐을 때는 어려워 난해했지만 알고나니 더 난해한 비교적 간단하게 할 수 있는 파트였다. 이제 어디가서 이 두 플랫폼의 결제 영수증쯤은 아무렇지도 않게 검증 할 수 있다고 당당히 얘기하자.
 
