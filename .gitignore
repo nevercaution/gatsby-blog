@@ -1,0 +1,15 @@
+.env
+.vscode
+.gatsby-context.js
+.DS_Store
+.intermediate-representation/
+yarn.lock
+
+# Project dependencies
+.cache
+node_modules
+yarn-error.log
+
+# Build directory
+.DS_Store
+public/
