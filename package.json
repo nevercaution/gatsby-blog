@@ -47,9 +47,9 @@
     "start": "gatsby develop",
     "build": "rm -rf .cache/ && rm -rf public/ && gatsby build",
     "clean": "rm -rf .cache/ && rm -rf public/",
-    "gh-pages": "gh-pages -b master -d public",
-    "deploy": "rm -rf .cache/ && rm -rf public/ && gatsby build && gh-pages -b master -d public",
-    "format": "prettier --write '**/*.js'"
+    "gh-pages": "gh-pages -d public -b master -r 'https://github.com/nevercaution/nevercaution.github.io'",
+    "deploy": "npm run build && npm run publish",
+    "format": "prettier --trailing-comma es5 --no-semi --single-quote --write 'src/**/*.js' 'src/**/*.md'"
   },
   "devDependencies": {
     "gh-pages": "^1.2.0",
@@ -57,6 +57,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nevercaution/gatsby-blog"
+    "url": "https://github.com/nevercaution/nevercaution.github.io"
   }
 }
