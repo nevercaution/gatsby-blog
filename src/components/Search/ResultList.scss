@@ -1,0 +1,74 @@
+@import '../../utils/variables.scss';
+
+.result {
+  a {
+    color: $font-color-1;
+    transition: 0.3s;
+  }
+
+  a:hover {
+    color: $font-color-0;
+  }
+}
+
+.no-result {
+  text-align: center;
+}
+
+.page-list {
+  margin: 0;
+  border-top: 1px solid $line-color;
+  width: 100%;
+  display: flex;
+  padding: 1rem 2rem;
+
+  @media screen and (max-width: $break-small) {
+    padding: 0.5rem 0;
+  }
+
+  .page-nav {
+    all: unset;
+    cursor: pointer;
+    font-size: 1.5rem;
+    width: 2rem;
+    display: flex;
+    color: $font-color-3;
+
+    &:hover {
+      transition: 0.3s all;
+      color: $font-color-0 !important;
+    }
+
+    &>* {
+      margin: 0 auto;
+    }
+  }
+
+  .page-number {
+    color: $font-color-2;
+    border: 0;
+    background-color: transparent;
+    text-align: center;
+    display: inline-block;
+    flex-grow: 1;
+    transition: 0.3s;
+  }
+
+  .page-number:focus {
+    outline: none;
+  }
+
+  .page-number:hover {
+    cursor: pointer;
+    color: $font-color-0;
+  }
+
+  .page-dummy {
+    pointer-events: none;
+  }
+
+  .page-number.select-number {
+    color: $font-color-0;
+    font-weight: bold;
+  }
+}
