@@ -20,7 +20,7 @@ let config = {
   // In addition, client-id in '/static/ads.txt' file needs to be modified
   googleAdsense: true,
   adsenseClient: 'pub-2516810533693172',
-  adsenseSlot: '5544246730',
+  adsenseSlot: '2584789791',
 };
 
 /********************************************** */
